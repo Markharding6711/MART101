@@ -1,0 +1,39 @@
+
+body{
+    background-color:lightblue;
+    background-image: url(Catbackround.webp);
+    background-blend-mode:luminosity;
+}
+
+
+.content{
+    font-family:monospace;
+    font-size: 45px;
+    color:rgb(101, 227, 255);
+}
+
+.title
+{
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    font-size: 42px;
+    color:rgb(244, 252, 4);
+}
+
+#home{
+    color:rgb(0, 255, 60);
+}
+
+#contact{
+    color:rgb(248, 129, 25);
+}
+
+a:hover{
+    text-decoration:wavy;
+}
+
+a{
+    text-decoration:dotted;
+    font-size: 32px;
+    font-family:'Times New Roman', Times, serif;
+    font-weight: bold;
+}

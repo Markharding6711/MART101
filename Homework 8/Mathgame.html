@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .question {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Simple Math Game</h1>
+    <div class="question" id="question"></div>
+    <div class="input-section">
+        <input type="number" id="answer" placeholder="Your answer">
+        <button onclick="checkAnswer()">Submit</button>
+    </div>
+    <div class="results" id="results"></div>
+
+    <script>
+        let correctAnswers = 0;
+        let incorrectAnswers = 0;
+        let totalQuestions = 10;
+        let currentQuestion = 0;
+
+        function generateQuestion() {
+            let num1 = Math.floor(Math.random() * 10) + 1;
+            let num2 = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('question').innerText = `What is ${num1} + ${num2}?`;
+            return num1 + num2;
+        }
+
+        let correctAnswer = generateQuestion();
+
+        function checkAnswer() {
+            let userAnswer = document.getElementById('answer').value;
+            if (userAnswer == correctAnswer) {
+                correctAnswers++;
+            } else {
+                incorrectAnswers++;
+            }
+
+            currentQuestion++;
+            if (currentQuestion < totalQuestions) {
+                correctAnswer = generateQuestion();
+                document.getElementById('answer').value = '';
+            } else {
+                let percentage = (correctAnswers / totalQuestions) * 100;
+                document.getElementById('results').innerHTML = `
+                    <p>Correct Answers: ${correctAnswers}</p>
+                    <p>Incorrect Answers: ${incorrectAnswers}</p>
+                    <p>Percentage: ${percentage}%</p>
+                `;
+                document.querySelector('.input-section').style.display = 'none';
+            }
+        }
+    </script>
+    <a id="home" href="Homepage.html">Homepage |</a> |
+    <a id="contact" href="Contact.html">Contact Us</a>
+</body>
+</html>

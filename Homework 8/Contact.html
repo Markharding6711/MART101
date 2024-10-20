@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Contact Us</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+    <link rel="stylesheet" href="Main.css">
+    <script>
+        function validateForm() {
+            let isValid = true;
+            let missingFields = [];
+
+            let fName = document.getElementById('fName');
+            let lName = document.getElementById('lName');
+            let homeCheck = document.getElementById('home');
+            let contactCheck = document.getElementById('contact');
+
+            // Reset styles
+            fName.style.borderColor = "";
+            fName.style.backgroundColor = "";
+            lName.style.borderColor = "";
+            lName.style.backgroundColor = "";
+            homeCheck.parentNode.style.color = "";
+            contactCheck.parentNode.style.color = "";
+
+            // Validate first name
+            if (fName.value.trim() === "") {
+                fName.style.borderColor = "lightcoral";
+                fName.style.backgroundColor = "red";
+                missingFields.push("Name");
+                isValid = false;
+            }
+
+            // Validate last name (email)
+            if (lName.value.trim() === "") {
+                lName.style.borderColor = "lightcoral";
+                lName.style.backgroundColor = "red";
+                missingFields.push("Email");
+                isValid = false;
+            }
+
+            // Validate terms acceptance
+            if (!homeCheck.checked && !contactCheck.checked) {
+                homeCheck.parentNode.style.color = "red";
+                contactCheck.parentNode.style.color = "red";
+                missingFields.push("Terms of Agreement");
+                isValid = false;
+            }
+
+            // Display appropriate message
+            if (isValid) {
+                alert("Good Job!");
+            } else {
+                alert("Please fill out the following fields: " + missingFields.join(", "));
+            }
+
+            return isValid;
+        }
+    </script>
+</head>
+<body>
+    <h1 class="title">Contact Us</h1>
+    <form onsubmit="return validateForm()">
+        Name: <input type="text" id="fName" name="fName"><br>
+        Email: <input type="text" id="lName" name="lName"><br>
+        <h2 class="title">Accept terms of agreement</h2>
+        <input id="home" type="checkbox" name="accept" value="yes"> Yes<br>
+        <input id="contact" type="checkbox" name="accept" value="no"> No<br>
+        <input type="submit" value="Submit">
+    </form>
+    <br>
+    <a id="home" href="Homepage.html">Homepage |</a> |
+    <a id="contact" href="Story.html">Short Story and Artwork |</a>
+    <a id="Mathgame" href="Mathgame.html">Mathgame</a>
+</body>
+</html>
