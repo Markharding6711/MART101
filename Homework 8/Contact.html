@@ -14,7 +14,7 @@
             let homeCheck = document.getElementById('home');
             let contactCheck = document.getElementById('contact');
 
-            // Reset styles
+        
             fName.style.borderColor = "";
             fName.style.backgroundColor = "";
             lName.style.borderColor = "";
@@ -22,7 +22,7 @@
             homeCheck.parentNode.style.color = "";
             contactCheck.parentNode.style.color = "";
 
-            // Validate first name
+         
             if (fName.value.trim() === "") {
                 fName.style.borderColor = "lightcoral";
                 fName.style.backgroundColor = "red";
@@ -30,7 +30,7 @@
                 isValid = false;
             }
 
-            // Validate last name (email)
+           
             if (lName.value.trim() === "") {
                 lName.style.borderColor = "lightcoral";
                 lName.style.backgroundColor = "red";
@@ -38,7 +38,7 @@
                 isValid = false;
             }
 
-            // Validate terms acceptance
+            
             if (!homeCheck.checked && !contactCheck.checked) {
                 homeCheck.parentNode.style.color = "red";
                 contactCheck.parentNode.style.color = "red";
@@ -46,7 +46,7 @@
                 isValid = false;
             }
 
-            // Display appropriate message
+           
             if (isValid) {
                 alert("Good Job!");
             } else {
