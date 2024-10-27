@@ -56,8 +56,14 @@ function drawPerson(x, y) {
     rect(x + 10, y + 160, 20, 8); // Right foot (larger)  
 }  
 function displayText() {  
-    fill(0);  
+ 
+   fill(0);
     textSize(40);
-    textAlign(LEFT, TOP); 
-    text("Mark Harding", 10, 10);
+    textAlign(LEFT, TOP);
+    text("Self Portrait", 10, 10);
+
+    textSize(25);
+    textAlign(CENTER, CENTER);
+    text("- Mark Harding", width / 1.3, height / 2 + 130);
 }
+
