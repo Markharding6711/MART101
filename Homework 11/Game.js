@@ -44,9 +44,21 @@ function movePlayer() {
 
 function moveSquares() {
     squares.forEach(square => {
-        square.x += square.speed;
-        if (square.x > canvas.width || square.x < 0) {
-            square.speed *= -1;
+        // Move square in random directions
+        square.x += square.speed * (Math.random() > 0.5 ? 1 : -1);
+        square.y += square.speed * (Math.random() > 0.5 ? 1 : -1);
+
+        // Check if the square goes off the screen and reposition it
+        if (square.x > canvas.width) {
+            square.x = 0;
+        } else if (square.x < 0) {
+            square.x = canvas.width;
+        }
+
+        if (square.y > canvas.height) {
+            square.y = 0;
+        } else if (square.y < 0) {
+            square.y = canvas.height;
         }
     });
 }
