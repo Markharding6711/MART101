@@ -30,7 +30,7 @@ function setup() {
     textX = width / 1.3;
     textY = height / 2 + 130;
     textSpeedX = 1;
-    textSpeedY = 0;
+    textSpeedY = 1;
     headColor = color(255, 220, 185);
     sunglassesColor = color(0);
     shirtColor = color(100, 150, 200);
@@ -190,7 +190,7 @@ function animateHead() {
 
 function changeColors() {
     sunglassesColor = color(random(255), random(255), random(255));
-    shirtColor = color(random(255), random(255), random(255));
+    skinColor = color(random(255), random(255), random(255));
     pantsColor = color(random(255), random(255), random(255));
     shoeColor = color(random(255), random(255), random(255));
    
