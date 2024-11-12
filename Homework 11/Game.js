@@ -1,133 +1,126 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+var characterX = 100;  
+var characterY = 100;  
+var characterSize = 25; // Start size of the character  
+var mouseShapeX = 0;  
+var mouseShapeY = 0;  
+var w = 87;   
+var s = 83;  
+var a = 65;  
+var d = 68;  
 
-const player = {
-    x: canvas.width / 2,
-    y: canvas.height - 30,
-    radius: 15,
-    color: 'blue',
-    speed: 5
-};
+var shapes = [  
+    { x: 0, y: 0, size: 10, color: [255, 0, 0], xSpeed: 0, ySpeed: 0 },  
+    { x: 0, y: 0, size: 15, color: [0, 255, 0], xSpeed: 0, ySpeed: 0 },  
+    { x: 0, y: 0, size: 20, color: [0, 0, 255], xSpeed: 0, ySpeed: 0 },  
+    { x: 0, y: 0, size: 25, color: [255, 255, 0], xSpeed: 0, ySpeed: 0 },  
+    { x: 0, y: 0, size: 30, color: [0, 255, 255], xSpeed: 0, ySpeed: 0 }  
+];  
 
-const squares = [
-    { x: 50, y: 100, width: 30, height: 30, color: 'red', speed: 2 },
-    { x: 150, y: 200, width: 40, height: 40, color: 'green', speed: 3 },
-    { x: 250, y: 300, width: 50, height: 50, color: 'yellow', speed: 4 },
-    { x: 350, y: 400, width: 60, height: 60, color: 'purple', speed: 5 },
-    { x: 450, y: 500, width: 70, height: 70, color: 'orange', speed: 6 }
-];
+function setup() {  
+    createCanvas(500, 600);  
+    shapes.forEach(shape => {  
+        shape.x = Math.floor(Math.random() * (width - shape.size));  
+        shape.y = Math.floor(Math.random() * (height - shape.size));  
+        shape.xSpeed = Math.floor(Math.random() * 5) + 1;  
+        shape.ySpeed = Math.floor(Math.random() * 5) + 1;  
+        if (Math.random() > 0.5) shape.xSpeed *= -1;  
+        if (Math.random() > 0.5) shape.ySpeed *= -1;  
+    });  
+    createCharacter(200, 350);  
+}  
 
-let keys = {};
-let triangles = [];
+function draw() {  
+    background(200);  
+    stroke(0);  
+    fill(0);  
+    createBorders(10);  
+    textSize(16);  
+    text("EXIT", width - 50, height - 50);  
+    drawCharacter();  
+    characterMovement();  
+    moveAndDrawShapes();  
+    checkWinCondition();  
+    fill(120, 130, 140);  
+    circle(mouseShapeX, mouseShapeY, 25);  
+}  
 
-document.addEventListener('keydown', (e) => {
-    keys[e.key] = true;
-});
+function characterMovement() {  
+    if (keyIsDown(w) && characterY > 0) {  
+        characterY -= 10;   
+    }  
+    if (keyIsDown(s) && characterY < height) {  
+        characterY += 10;   
+    }  
+    if (keyIsDown(a) && characterX > 0) {  
+        characterX -= 10;   
+    }  
+    if (keyIsDown(d) && characterX < width) {  
+        characterX += 10;   
+    }  
+}  
 
-document.addEventListener('keyup', (e) => {
-    keys[e.key] = false;
-});
+function createCharacter(x, y) {  
+    characterX = x;  
+    characterY = y;  
+}  
 
-canvas.addEventListener('mousedown', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    triangles.push({ x: mouseX, y: mouseY });
-});
+function drawCharacter() {  
+    fill(23, 40, 123);  
+    circle(characterX, characterY, characterSize);  
+}  
 
-function movePlayer() {
-    if (keys['w'] && player.y > 0) player.y -= player.speed;
-    if (keys['s'] && player.y < canvas.height - player.radius) player.y += player.speed;
-    if (keys['a'] && player.x > 0) player.x -= player.speed;
-    if (keys['d'] && player.x < canvas.width - player.radius) player.x += player.speed;
-}
+function createBorders(thickness) {  
+    rect(0, 0, width, thickness); // top border  
+    rect(0, 0, thickness, height); // left border  
+    rect(0, height - thickness, width, thickness); // bottom border  
+    rect(width - thickness, 0, thickness, height - 50); // right border  
+}  
 
-function moveSquares() {
-    squares.forEach(square => {
-        // Move square in random directions
-        square.x += square.speed * (Math.random() > 0.5 ? 1 : -1);
-        square.y += square.speed * (Math.random() > 0.5 ? 1 : -1);
+function moveAndDrawShapes() {  
+    for (let i = shapes.length - 1; i >= 0; i--) {  
+        let shape = shapes[i];  
+        fill(shape.color);  
+        rect(shape.x, shape.y, shape.size, shape.size);  
+        shape.x += shape.xSpeed;  
+        shape.y += shape.ySpeed;  
 
-        // Check if the square goes off the screen and reposition it
-        if (square.x > canvas.width) {
-            square.x = 0;
-        } else if (square.x < 0) {
-            square.x = canvas.width;
-        }
+        // Check for collision with the character  
+        if (collides(characterX, characterY, characterSize, shape.x, shape.y, shape.size)) {  
+            // Remove the shape if it's the smallest  
+            if (shape.size === 10) {  
+                shapes.splice(i, 1); // Remove the shape  
+                characterSize += 20; // Increase character size  
+            }  
+        }  
 
-        if (square.y > canvas.height) {
-            square.y = 0;
-        } else if (square.y < 0) {
-            square.y = canvas.height;
-        }
-    });
-}
+        // Wrap around the screen  
+        if (shape.x > width) shape.x = 0;  
+        if (shape.x < 0) shape.x = width;  
+        if (shape.y > height) shape.y = 0;  
+        if (shape.y < 0) shape.y = height;  
+    }  
+}  
 
-function checkCollision() {
-    squares.forEach(square => {
-        const distX = Math.abs(player.x - square.x - square.width / 2);
-        const distY = Math.abs(player.y - square.y - square.height / 2);
+function collides(cx, cy, cSize, sx, sy, sSize) {  
+    // Check for collision between character and square  
+    return (  
+        cx < sx + sSize &&  
+        cx + cSize > sx &&  
+        cy < sy + sSize &&  
+        cy + cSize > sy  
+    );  
+}  
 
-        if (distX <= (square.width / 2 + player.radius) && distY <= (square.height / 2 + player.radius)) {
-            player.x = canvas.width / 2;
-            player.y = canvas.height - 30;
-        }
-    });
-}
+function checkWinCondition() {  
+    if (characterX > width - 50 && characterY > height - 50) {  
+        fill(0);  
+        stroke(5);  
+        textSize(26);  
+        text("You Win!", width / 2 - 50, height / 2 - 50);  
+    }  
+}  
 
-function checkWin() {
-    if (player.y <= 0) {
-        alert('You Win!');
-        player.x = canvas.width / 2;
-        player.y = canvas.height - 30;
-    }
-}
-
-function drawPlayer() {
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-    ctx.fillStyle = player.color;
-    ctx.fill();
-    ctx.closePath();
-}
-
-function drawSquares() {
-    squares.forEach(square => {
-        ctx.fillStyle = square.color;
-        ctx.fillRect(square.x, square.y, square.width, square.height);
-    });
-}
-
-function drawTriangles() {
-    triangles.forEach(triangle => {
-        ctx.beginPath();
-        ctx.moveTo(triangle.x, triangle.y);
-        ctx.lineTo(triangle.x - 10, triangle.y + 20);
-        ctx.lineTo(triangle.x + 10, triangle.y + 20);
-        ctx.closePath();
-        ctx.fillStyle = 'black';
-        ctx.fill();
-    });
-}
-
-function drawExitText() {
-    ctx.font = '30px Arial';
-    ctx.fillStyle = 'red';
-    ctx.textAlign = 'center';
-    ctx.fillText('EXIT', canvas.width / 2, 40);
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawPlayer();
-    drawSquares();
-    drawTriangles();
-    drawExitText();
-    movePlayer();
-    moveSquares();
-    checkCollision();
-    checkWin();
-    requestAnimationFrame(draw);
-}
-
-draw();
+function mouseClicked() {  
+    mouseShapeX = mouseX;  
+    mouseShapeY = mouseY;  
+}  
