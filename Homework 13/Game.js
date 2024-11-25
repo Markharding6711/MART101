@@ -84,7 +84,7 @@ function moveAndDrawShapes() {
         shape.x += shape.xSpeed;  
         shape.y += shape.ySpeed;  
 
-        // collision with the character  
+        // Check for collision with the character  
         if (collides(characterX, characterY, characterSize, shape.x, shape.y, shape.size)) {  
             // Remove the shape if it's the smallest  
             if (shape.size === 10) {  
@@ -121,6 +121,40 @@ function checkWinCondition() {
 }  
 
 function mouseClicked() {  
-    mouseShapeX = mouseX;  
-    mouseShapeY = mouseY;  
+    // Create a new shape at the mouse click position  
+    let newSize = Math.floor(Math.random() * 20) + 10; // Random size between 10 and 30  
+    let newColor = [Math.floor(Math.random() * 256), Math.floor(Math.random() * 256), Math.floor(Math.random() * 256)]; // Random RGB color  
+    let newShape = {  
+        x: mouseX,  
+        y: mouseY,  
+        size: newSize,  
+        color: newColor,  
+        xSpeed: Math.floor(Math.random() * 5) + 1 * (Math.random() > 0.5 ? 1 : -1), // Random speed and direction  
+        ySpeed: Math.floor(Math.random() * 5) + 1 * (Math.random() > 0.5 ? 1 : -1), // Random speed and direction  
+    };  
+    shapes.push(newShape); // Add the new shape to the array  
 }  
+function moveAndDrawShapes() {  
+    for (let i = shapes.length - 1; i >= 0; i--) {  
+        let shape = shapes[i];  
+        fill(shape.color);  
+        rect(shape.x, shape.y, shape.size, shape.size);  
+        shape.x += shape.xSpeed;  
+        shape.y += shape.ySpeed;  
+
+        // Check for collision with the character  
+        if (collides(characterX, characterY, characterSize, shape.x, shape.y, shape.size)) {  
+            // Remove the shape if it's the smallest  
+            if (shape.size === 10) {  
+                shapes.splice(i, 1); // Remove the shape  
+                characterSize += 20; // Increase character size  
+            }  
+        }  
+
+        // Wrap around the screen  
+        if (shape.x > width) shape.x = 0;  
+        if (shape.x < 0) shape.x = width;  
+        if (shape.y > height) shape.y = 0;  
+        if (shape.y < 0) shape.y = height;  
+    } 
+}
